@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:project_bank_localdatabase_app/models/contact.dart';
 
-class ContactsItem extends StatelessWidget {
+class ContactItem extends StatelessWidget {
 
   final Contact contact;
 
-  ContactsItem(this.contact);
+  ContactItem(this.contact);
 
   @override
   Widget build(BuildContext context) {
