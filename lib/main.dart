@@ -1,10 +1,14 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:project_bank_localdatabase_app/screens/contacts/contacts_form.dart';
-import 'package:project_bank_localdatabase_app/screens/contacts/contacts_screen.dart';
-import 'package:project_bank_localdatabase_app/screens/dashboard/dashboard_screen.dart';
+import 'database/app_database.dart';
+import 'models/contact.dart';
+import 'screens/dashboard/dashboard_screen.dart';
 
-void main() => runApp(BankApp());
+void main() {
+  runApp(BankApp());
+  save(Contact(1, 'Michael', 1000)).then((id){
+    findAll().then((contacts) => debugPrint(contacts.toString()));
+  });
+}
 
 class BankApp extends StatelessWidget {
   @override
