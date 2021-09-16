@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:project_bank_localdatabase_app/screens/contacts/contacts_list.dart';
+import 'package:project_bank_localdatabase_app/screens/contacts_list.dart';
 
 class ButtomDashboard extends StatelessWidget {
   @override
