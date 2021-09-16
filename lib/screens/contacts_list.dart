@@ -1,25 +1,28 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:project_bank_localdatabase_app/components/contacts_components/contacts_item.dart';
-import 'package:project_bank_localdatabase_app/database/app_database.dart';
+import 'package:project_bank_localdatabase_app/database/dao/contact_dao.dart';
 import 'package:project_bank_localdatabase_app/models/contact.dart';
 import 'package:project_bank_localdatabase_app/models/theme_colors.dart';
-import 'package:project_bank_localdatabase_app/screens/contacts/contacts_form.dart';
+import 'package:project_bank_localdatabase_app/screens/contacts_form.dart';
 
-class ContactsList extends StatelessWidget {
+class ContactsList extends StatefulWidget {
+  @override
+  _ContactsListState createState() => _ContactsListState();
+}
+
+class _ContactsListState extends State<ContactsList> {
   final _themeColors = ThemeColors();
+  final ContactDao _dao = ContactDao();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: _themeColors.themeDefault,
-        title: Text('Lista de Contatos'),
+        title: Text('Contatos'),
       ),
-      //FutureBuilder atualiza a lista quando stateless
       body: FutureBuilder<List<Contact>>(
         //initialData: [], //Outra solução para ir para a tela de contatos sem erro
-        future: Future.delayed(Duration(seconds: 1)).then((value) => findAll()),
+        future: Future.delayed(Duration(seconds: 1)).then((value) => _dao.findAll()),
         builder: (context, snapshot) {
           switch (snapshot.connectionState) {
             case ConnectionState.none: //none: quando ainda não foi executado
@@ -38,13 +41,13 @@ class ContactsList extends StatelessWidget {
             case ConnectionState.active: //active: quando existe o dado no snapshot mas ainda não está concluido
               break;
             case ConnectionState.done: //done: quando está concluido
-              final List<Contact> contacts = snapshot.data as List<Contact>;
+              final List<Contact>? contacts = snapshot.data;
               return ListView.builder(
                 itemBuilder: (context, index) {
-                  final Contact contact = contacts[index];
-                  return ContactItem(contact);
+                  final Contact contact = contacts![index];
+                  return _ContactItem(contact);
                 },
-                itemCount: contacts.length,
+                itemCount: contacts!.length,
               );
           }
           return Text('Unknown error');
@@ -56,10 +59,29 @@ class ContactsList extends StatelessWidget {
         onPressed: () {
           Navigator.of(context)
               .push(
-                MaterialPageRoute(builder: (context) => ContactsForm()),
+                MaterialPageRoute(
+                  builder: (context) => ContactsForm(),
+                ),
               )
-              .then((newContact) => debugPrint(newContact.toString()));
+              .then((value) => setState(() {}));
         },
+      ),
+    );
+  }
+}
+
+class _ContactItem extends StatelessWidget {
+  final Contact contact;
+
+  _ContactItem(this.contact);
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      child: ListTile(
+        title: Text(contact.name, style: TextStyle(fontSize: 20.0)),
+        subtitle: Text(contact.accountNumber.toString(),
+            style: TextStyle(fontSize: 16.0)),
       ),
     );
   }
